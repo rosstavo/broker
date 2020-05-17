@@ -19,7 +19,13 @@ module.exports = {
 
 		let magic = require('../magic.json');
 
-		let query = sw.removeStopwords( args ).join(' ');
+		let msgContent = msg.content.split(' ');
+
+		msgContent = msgContent.filter( arg => {
+			return ! arg.match(/<[^>]*>/g) && arg !== module.exports.name;
+		} );
+
+		let query = sw.removeStopwords( msgContent ).join(' ');
 
 		// Options for Fuse
 		let fuseOptions = {
@@ -27,7 +33,7 @@ module.exports = {
 			includeScore: true,
 			threshold: 0.5,
 			location: 0,
-			distance: 100,
+			distance: 50,
 			minMatchCharLength: 4,
 			findAllMatches: true,
 			keys: [
@@ -69,7 +75,7 @@ module.exports = {
 
 		let days = 0;
 		let reply = false;
-		let stockQty = require('../stockQty.json');
+		let transferQty = require('../transferQty.json');
 
 		if ( ! magic.find( el => el.item === result.item ) ) {
 			reply = fn.formatDialogue(fn.arrayRand( dialogue.error_not_available ), [ result.item ]);
@@ -77,9 +83,15 @@ module.exports = {
 
 		while ( ! reply ) {
 
+			if ( days > 365 ) {
+				reply = fn.formatDialogue(fn.arrayRand( dialogue.error_stock_date_not_found ), [ result.item ] );
+
+				break;
+			}
+
 			let date = new Date(new Date().toUTCString());
 
-			let allItems = fn.itemsForDay(magic, stockQty, date.setDate(date.getDate() + days)).filter( item => !("formula" in item) ).sort( fn.compareValues('avg') );
+			let allItems = fn.itemsForDay(magic, transferQty, date.setDate(date.getDate() + days)).filter( item => !("formula" in item) ).sort( fn.compareValues('avg') );
 
 		    if ( allItems.find( el => el.item === result.item ) ) {
 
@@ -107,15 +119,9 @@ module.exports = {
 
 		    days++;
 
-			if ( days > 365 ) {
-				reply = fn.formatDialogue(fn.arrayRand( dialogue.error_stock_date_not_found ), [ result.item ] );
-
-				break;
-			}
-
 		}
 
-		msg.reply( reply );
+		msg.reply( reply + '\n\n(Please deduct the 25gp meeting fee from your inventory.)' );
 
         return true;
 

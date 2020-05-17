@@ -19,14 +19,20 @@ module.exports = {
 		const fs 		  = require('fs');
 		const sw		  = require('stopword');
 
-		var dialogue = require('../dialogue.json');
+		let dialogue = require('../dialogue.json');
 
-		var magic = require('../magic.json');
+		let magic = require('../magic.json');
 
-		var query = sw.removeStopwords( args ).join(' ');
+		let msgContent = msg.content.split(' ');
+
+		msgContent = msgContent.filter( arg => {
+			return ! arg.match(/<[^>]*>/g) && arg !== module.exports.name;
+		} );
+
+		let query = sw.removeStopwords( msgContent ).join(' ');
 
 		// Options for Fuse
-		var fuseOptions = {
+		let fuseOptions = {
 			shouldSort: true,
 			includeScore: true,
 			threshold: 0.5,
@@ -40,7 +46,7 @@ module.exports = {
 		};
 
 		// Instantiate Fuse, do the search
-		var fuse = new Fuse( magic, fuseOptions );
+		let fuse = new Fuse( magic, fuseOptions );
 
 		let results = fuse.search( query );
 
@@ -52,19 +58,19 @@ module.exports = {
 		   return;
 		}
 
-		var result = results[0].item;
+		let result = results[0].item;
 
-		var formula = result.price.replace("×","*");
+		let formula = result.price.replace("×","*");
 
 		console.log( result );
 
 		(async (url) => {
 
-			var response = await fn.getScript(url);
+			let response = await fn.getScript(url);
 
 			response = JSON.parse( response );
 
-			var reply = fn.formatDialogue( fn.arrayRand( dialogue.evaluation_item ) + ' ' + fn.arrayRand( dialogue.evaluation_price ), [ result.item, response.result.toLocaleString() ] );
+			let reply = fn.formatDialogue( fn.arrayRand( dialogue.evaluation_item ) + ' ' + fn.arrayRand( dialogue.evaluation_price ), [ result.item, response.result.toLocaleString() ] );
 
 			if ( parseInt(response.result) > parseInt(result.dmpg.toString().replace(',','')) / 2 ) {
 				reply += ' You sense this is offer is above average.';

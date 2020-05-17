@@ -118,9 +118,9 @@ module.exports = {
 			/**
 			 * Get items for day
 			 */
-			let stockQty = require('../stockQty.json');
+			let transferQty = require('../transferQty.json');
 
-			let allItems = fn.itemsForDay(magic, stockQty, new Date(new Date().toUTCString())).sort( fn.compareValues('avg') )
+			let allItems = fn.itemsForDay(magic, transferQty, new Date(new Date().toUTCString())).sort( fn.compareValues('avg') )
 
 			/**
 			 * Filter items for sale

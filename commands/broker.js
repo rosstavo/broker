@@ -14,8 +14,12 @@ module.exports = {
 
 		const Fuse        = require('fuse.js');
 		const fn   		  = require('../functions.js');
+		const fs   		  = require('fs');
 		const shuffleSeed = require('shuffle-seed');
 		const Papa        = require('papaparse');
+
+		let today = new Date();
+		let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 
 		/**
 		 * Import dialogue
@@ -115,17 +119,36 @@ module.exports = {
 
 			embed.addField('—', `\u200b\n:crossed_swords: **Items**\n\n${playerString}` );
 
+			embed.addField('Purchasing items', 'To buy one of the items below, type `@Broker buy [number]`. Stock quantity represents today only, and resets at midnight.\n\u200b');
+
 			/**
 			 * Get items for day
 			 */
 			let transferQty = require('../transferQty.json');
 
-			let allItems = fn.itemsForDay(magic, transferQty, new Date(new Date().toUTCString())).sort( fn.compareValues('avg') )
+			let stockQty = JSON.parse( fs.readFileSync('stockQty.json') );
+
+			if (typeof stockQty[date] === 'undefined') {
+				stockQty[date] = fn.getQtys( transferQty );
+			}
+
+			let allItems = fn.itemsForDay(magic, transferQty, new Date(new Date().toUTCString())).map( (item, index) => {
+
+				if (typeof stockQty[date][index] !== 'undefined') {
+					item['qty'] = stockQty[date][index];
+				}
+
+				return item;
+
+			} );
+
 
 			/**
 			 * Filter items for sale
 			 */
 			let forSale = allItems.filter( item => !("formula" in item) );
+
+			let i = 0;
 
 			forSale.forEach( function(row) {
 
@@ -141,11 +164,17 @@ module.exports = {
 					note = '\n:clock11: Last chance!';
 				}
 
-				embed.addField(
-					row['Type'],
-					`**${row.item}**\n${emoji} ${row.rarity}\n${process.env.COIN}\`${fn.numberWithCommas(row.dmpg)} gp\`${note}\n\u200b`,
-					true
-				);
+				let title = `**${i+1}. ${row.item}**`;
+
+				if ( ! row.qty ) {
+					title = `~~${title}~~`;
+				}
+
+				let meta = `\n${emoji} ${row.rarity}\n${process.env.COIN}\`${fn.numberWithCommas(row.dmpg)} gp\`\n:package: \`${row.qty} in stock\`${note}\n\u200b`;
+
+				embed.addField( row['Type'], title + meta, true );
+
+				i++;
 
 			} );
 
@@ -154,7 +183,7 @@ module.exports = {
 			 */
 			let recipes = allItems.filter( item => item.formula );
 
-			embed.addField('—', '\u200b\n:scroll: **Formulae**\n\nFormulae can be purchased at any Level.');
+			embed.addField('—', '\u200b\n:scroll: **Formulae**\n\nFormulae can be purchased at any Level. To buy one of the formulae below, notify a `@dm`.');
 
 			recipes.forEach( function(row) {
 

@@ -3,8 +3,23 @@
         "interval": 1,
         "offset": 0,
         "items": {
-            "Common": 2,
+            "Common": 2
+        },
+        "flags": {
+            "qty": 3
+        },
+        "timedFlags": {
+            "isNew": 0
+        }
+    },
+    {
+        "interval": 1,
+        "offset": 0,
+        "items": {
             "Uncommon": 1
+        },
+        "flags": {
+            "qty": 2
         },
         "timedFlags": {
             "isNew": 0
@@ -14,8 +29,23 @@
         "interval": 1,
         "offset": -1,
         "items": {
-            "Common": 2,
+            "Common": 2
+        },
+        "flags": {
+            "qty": 1
+        },
+        "timedFlags": {
+            "lastChance": 0
+        }
+    },
+    {
+        "interval": 1,
+        "offset": -1,
+        "items": {
             "Uncommon": 1
+        },
+        "flags": {
+            "qty": 1
         },
         "timedFlags": {
             "lastChance": 0
@@ -27,6 +57,9 @@
         "items": {
             "Rare": 1
         },
+        "flags": {
+            "qty": 1
+        },
         "timedFlags": {
             "isNew": 0
         }
@@ -37,6 +70,9 @@
         "items": {
             "Rare": 1
         },
+        "flags": {
+            "qty": 1
+        },
         "timedFlags": {
             "lastChance": 6
         }
@@ -46,6 +82,9 @@
         "offset": 0,
         "items": {
             "Very Rare": 1
+        },
+        "flags": {
+            "qty": 1
         },
         "timedFlags": {
             "isNew": 0,
@@ -60,7 +99,9 @@
             "Rare": 1,
             "Very Rare": 1
         },
-        "flags": [ "formula" ],
+        "flags": {
+            "formula": true
+        },
         "timedFlags": {
             "isNew": 0
         }
@@ -73,7 +114,9 @@
             "Rare": 1,
             "Very Rare": 1
         },
-        "flags": [ "formula" ],
+        "flags": {
+            "formula": true
+        },
         "timedFlags": {
             "lastChance": 6
         }

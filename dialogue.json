@@ -1,4 +1,7 @@
 {
+    "buy": [
+        "You’d like to purchase %s, yes? That will be %s gold pieces."
+    ],
     "error_generic": [
         "Sorry dear, I’m not sure what you’re asking.",
         "Sorry darling, you’ll have to speak up, I’m wearing a towel.",
@@ -77,5 +80,14 @@
         "Give me a second…",
         "Give me two ticks…",
         "I’ll be right with you…"
+    ],
+    "stock_left": [
+        "I have %s of these left."
+    ],
+    "stock_last_one": [
+        "That was my last one! All sold out now."
+    ],
+    "stock_sold_out": [
+        "Sorry darling, sold out of those earlier."
     ]
 }

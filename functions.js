@@ -209,9 +209,7 @@ module.exports = {
 
                     } );
 
-                    if ( arg.flags ) {
-                        arg.flags.forEach( flag => o[flag] = true );
-                    }
+                    Object.keys( arg.flags ).forEach( key => o[key] = arg.flags[key] );
 
                     return o;
 
@@ -222,6 +220,28 @@ module.exports = {
         } );
 
         return items;
+    },
+    getQtys: ( transferQty ) => {
+
+        let stockQty = [];
+
+        transferQty.forEach( transfer => {
+
+            if ( typeof transfer.flags.qty === 'undefined' ) {
+                return;
+            }
+
+            let entries = Object.values(transfer.items);
+
+            const totalItems = entries.reduce((a,b) => a + b, 0);
+
+            for( let i = 0; i < totalItems; i++ ) {
+                stockQty.push( transfer.flags.qty );
+            }
+
+        } );
+
+        return stockQty;
     }
 
 };

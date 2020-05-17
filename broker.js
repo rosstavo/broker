@@ -3,9 +3,17 @@
  */
 require('dotenv').config();
 const fn   = require('./functions.js');
+const fs   = require('fs');
 const Fuse = require('fuse.js');
 
 const dialogue = require('./dialogue.json');
+
+let transferQty = require('./transferQty.json');
+let stockQty = JSON.parse( fs.readFileSync('stockQty.json') );
+
+let today = new Date(new Date().toUTCString());
+let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+
 
 /**
  * Set up the client
@@ -72,6 +80,46 @@ bot.on('ready', () => {
  * On a new message, perform a command if it exists
  */
 bot.on('message', message => {
+
+    // if ( ! stockQty[date].length ) {
+
+        /**
+         * Import magic items & filter
+         */
+        // let magic = require('./magic.json');
+        //
+        // magic = magic.filter( item => {
+        //
+        //     if ( item['rarity'] === 'Legendary' ) {
+        //         return false;
+        //     }
+        //
+        //     if ( item['Type'] === 'Spell Scrolls' ) {
+        //         return false;
+        //     }
+        //
+        //     if ( item['exclude'] ) {
+        //         return false;
+        //     }
+        //
+        //     return true;
+        // } );
+        //
+        // let itemsForDay = fn.itemsForDay(magic, transferQty, today).filter( item => !("formula" in item) ).map( (item, index) => {
+        //
+        //     if (typeof stockQty[date][index] !== 'undefined') {
+        //         item['qty'] = stockQty[date][index];
+        //     }
+        //
+        //     return item;
+        //
+        // } );
+
+        // We need to make a new stock list
+
+
+
+    // }
 
     let commandName = false;
 
